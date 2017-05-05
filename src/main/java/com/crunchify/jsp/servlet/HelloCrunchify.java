@@ -16,7 +16,7 @@ import javax.servlet.RequestDispatcher;
  
 public class HelloCrunchify extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // reading the user input
+/*        // reading the user input
         String id = request.getParameter("id");
         String nombre = request.getParameter("nombre");
         
@@ -37,6 +37,6 @@ public class HelloCrunchify extends HttpServlet {
         RequestDispatcher redireccion = request.getRequestDispatcher("index.jsp");
         redireccion.forward(request, response);
         
-        
+        */
         }
 }

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import edu.co.sergio.mundo.vo.Departamento;
+import edu.co.sergio.mundo.vo.Proyecto;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,15 +27,15 @@ import java.util.logging.Logger;
  */
  
 
-public class DepartamentoDAO implements IBaseDatos<Departamento> {
+public class DepartamentoDAO implements IBaseDatos<Proyecto> {
 
 	/**
 	 * Funcion que permite obtener una lista de los departamentos existentes en la base de datos
 	 * @return List<Departamento> Retorna la lista de Departamentos existentes en la base de datos
 	 */
-	public List<Departamento> findAll() {
-		List<Departamento> departamentos= null;
-	    String query = "SELECT * FROM Depto";
+	public List<Proyecto> findAll() {
+		List<Proyecto> proyectos= null;
+	    String query = "select nom_proy, count(*) as total from Proyecto left join Recurso using (id_proyecto) group by nom_proy";
 	    Connection connection = null;
             try {
                 connection = Conexion.getConnection();
@@ -44,22 +45,22 @@ public class DepartamentoDAO implements IBaseDatos<Departamento> {
 	    try {
 	    Statement st = connection.createStatement();
 	    ResultSet rs = st.executeQuery(query);
-	    int id =0;
-	    String nombre = null;
+	    String id =null;
+	    int total = 0;
 	
 	    while (rs.next()){
-	    	if(departamentos == null){
-	    		departamentos= new ArrayList<Departamento>();
+	    	if(proyectos == null){
+	    		proyectos= new ArrayList<Proyecto>();
 	    	}
 	      
-	        Departamento registro= new Departamento();
-	        id = rs.getInt("id_depto");
-	        registro.setId_departamento(id);
+	        Proyecto registro= new Proyecto();
+	        id= rs.getString("nom_proy");
+	        registro.setNom_proyecto(id);
 	        
-	        nombre = rs.getString("nom_depto");
-	        registro.setNom_departamento(nombre) ;
+	        total = rs.getInt("total");
+	        registro.setTotal(total); 
 	        
-	        departamentos.add(registro);
+	        proyectos.add(registro);
 	    }
 	    st.close();
 	    
@@ -68,8 +69,23 @@ public class DepartamentoDAO implements IBaseDatos<Departamento> {
 			e.printStackTrace();
 		}
 	    
-	    return departamentos;
+	    return proyectos;
 	}
+
+    @Override
+    public boolean insert(Proyecto t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean update(Proyecto t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean delete(Proyecto t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 	
 	/**
@@ -77,80 +93,5 @@ public class DepartamentoDAO implements IBaseDatos<Departamento> {
 	 * @param Departamento recibe un objeto de tipo Departamento 
 	 * @return boolean retorna true si la operacion de insercion es exitosa.
 	 */
-	public boolean insert(Departamento t) {
-		boolean result=false;
-		Connection connection=null;
-            try {
-                connection = Conexion.getConnection();
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(DepartamentoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-	    String query = " insert into Depto (id_depto,nom_depto)"  + " values (?,?)";
-        PreparedStatement preparedStmt=null;
-	    try {
-			preparedStmt = connection.prepareStatement(query);
-			preparedStmt.setInt (1, t.getId_departamento());
-                        preparedStmt.setString (2, t.getNom_departamento());
-			result= preparedStmt.execute();
-	    } catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	/**
-	 * Funcion que permite realizar la actualizacion de un nuevo registro en la tabla Departamento
-	 * @param Departamento recibe un objeto de tipo Departamento 
-	 * @return boolean retorna true si la operacion de actualizacion es exitosa.
-	 */
-	public boolean update(Departamento t) {
-		boolean result=false;
-		Connection connection= null;
-            try {
-                connection = Conexion.getConnection();
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(DepartamentoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-		String query = "update Depto set nom_depto = ? where id_depto = ?";
-		PreparedStatement preparedStmt=null;
-		try {
-		    preparedStmt = connection.prepareStatement(query);
-		    preparedStmt.setString(1, t.getNom_departamento());
-                    preparedStmt.setInt   (2, t.getId_departamento());
-		    if (preparedStmt.executeUpdate() > 0){
-		    	result=true;
-		    }
-			    
-		} catch (SQLException e) {
-				e.printStackTrace();
-		}
-			
-		return result;
-	}
-
-	/**
-	 * Funcion que permite realizar la eliminario de registro en la tabla Departamento
-	 * @param Departamento recibe un objeto de tipo Departamento 
-	 * @return boolean retorna true si la operacion de borrado es exitosa.
-	 */
-	public boolean delete(Departamento t) {
-	   boolean result=false;
-	   Connection connection = null;
-            try {
-                connection = Conexion.getConnection();
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(DepartamentoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-	   String query = "delete from Depto where id_depto = ?";
-	   PreparedStatement preparedStmt=null;
-	   try {
-		     preparedStmt = connection.prepareStatement(query);
-		     preparedStmt.setInt(1, t.getId_departamento());
-		    result= preparedStmt.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	   
-	   return result;
-	}
+	
 }

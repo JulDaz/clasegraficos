@@ -5,7 +5,7 @@
  */
 package edu.co.sergio.mundo.dao;
 
-import edu.co.sergio.mundo.vo.Depart;
+import edu.co.sergio.mundo.vo.Consulta3;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -20,37 +20,41 @@ import java.util.logging.Logger;
  *
  * @author JulDa
  */
-public class DepartDAO implements IBaseDatos<Depart>{
+public class Consulta3DAO implements IBaseDatos<Consulta3>{
 
     @Override
-    public List<Depart> findAll() {
-       List<Depart> departos= null;
-	    String query = "select nom_depto, count(*) as num from Depto natural join Proyecto natural join DeptoProyecto group by nom_depto";
+    public List<Consulta3> findAll() {
+        List<Consulta3> consul= null;
+	    String query = "select nom_depto, tipo_contrato, count(*) as total from Depto join Empleado using (id_depto) group by nom_depto, tipo_contrato having count(*)>1";
 	    Connection connection = null;
             try {
                 connection = Conexion.getConnection();
             } catch (URISyntaxException ex) {
-                Logger.getLogger(DepartDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Consulta3DAO.class.getName()).log(Level.SEVERE, null, ex);
             }
 	    try {
 	    Statement st = connection.createStatement();
 	    ResultSet rs = st.executeQuery(query);
 	    String id =null;
-	    int num = 0;
+            String f2= null;
+	    int total = 0;
 	
 	    while (rs.next()){
-	    	if(departos == null){
-	    		departos= new ArrayList<Depart>();
+	    	if(consul == null){
+	    		consul= new ArrayList<Consulta3>();
 	    	}
 	      
-	        Depart registro= new Depart();
+	        Consulta3 registro= new Consulta3();
 	        id= rs.getString("nom_depto");
 	        registro.setNom_depto(id);
 	        
-	        num = rs.getInt("num");
-	        registro.setNum(num); 
+                f2= rs.getString("tipo_contrato");
+	        registro.setTipo_contrato(f2);
+                
+	        total = rs.getInt("total");
+	        registro.setTotal(total);
 	        
-	        departos.add(registro);
+	        consul.add(registro);
 	    }
 	    st.close();
 	    
@@ -59,22 +63,21 @@ public class DepartDAO implements IBaseDatos<Depart>{
 			e.printStackTrace();
 		}
 	    
-	    return departos;
-	}
-    
+	    return consul;
+    }
 
     @Override
-    public boolean insert(Depart t) {
+    public boolean insert(Consulta3 t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean update(Depart t) {
+    public boolean update(Consulta3 t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean delete(Depart t) {
+    public boolean delete(Consulta3 t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

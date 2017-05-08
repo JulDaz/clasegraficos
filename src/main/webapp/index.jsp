@@ -37,7 +37,9 @@ body {
       
     
     %>
-    <img src="ChartServlet" />
-    <img src="Chart2" />
+    <img src="ChartServlet" /> <br>
+    <img src="Chart2" /> <br>
+    <img src="Chart3" />
+    
 </body>
 </html>

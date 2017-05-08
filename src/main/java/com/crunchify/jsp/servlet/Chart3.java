@@ -5,10 +5,8 @@
  */
 package com.crunchify.jsp.servlet;
 
-import edu.co.sergio.mundo.dao.DepartDAO;
-import edu.co.sergio.mundo.dao.DepartamentoDAO;
-import edu.co.sergio.mundo.vo.Depart;
-import edu.co.sergio.mundo.vo.Proyecto;
+import edu.co.sergio.mundo.dao.Consulta3DAO;
+import edu.co.sergio.mundo.vo.Consulta3;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.IOException;
@@ -26,9 +24,9 @@ import org.jfree.data.general.DefaultPieDataset;
  *
  * @author JulDa
  */
-public class Chart2 extends HttpServlet{
+public class Chart3 extends HttpServlet {
     
-    private static final long serialVersionUID = 1L;
+     private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         	response.setContentType("image/png");
@@ -44,11 +42,11 @@ public class Chart2 extends HttpServlet{
 		
                 DefaultPieDataset dataset = new DefaultPieDataset();
 	        //Crear la capa de servicios que se enlace con el DAO
-                DepartDAO Dao= new DepartDAO();
-                ArrayList<Depart> dep = (ArrayList<Depart>) Dao.findAll();
+                Consulta3DAO Dao= new Consulta3DAO();
+                ArrayList<Consulta3> con = (ArrayList<Consulta3>) Dao.findAll();
                 
-                for (Depart depart : dep) {
-                dataset.setValue(depart.getNom_depto(), depart.getNum());
+                for (Consulta3 consulta3 : con) {
+                    dataset.setValue(consulta3.getNom_depto(), consulta3.getTotal());
                 
             }
  /*               
@@ -60,7 +58,7 @@ public class Chart2 extends HttpServlet{
 		boolean tooltips = false;
 		boolean urls = false;
 
-		JFreeChart chart = ChartFactory.createPieChart("Deptos", dataset, legend, tooltips, urls);
+		JFreeChart chart = ChartFactory.createPieChart("Contratos", dataset, legend, tooltips, urls);
 
 		chart.setBorderPaint(Color.GREEN);
 		chart.setBorderStroke(new BasicStroke(5.0f));
@@ -68,4 +66,5 @@ public class Chart2 extends HttpServlet{
 
 		return chart;
 	}
+    
 }
